@@ -141,8 +141,6 @@ async function generate({dom, baseUrl, isDebug, sourceDir, distDir, writeAsset, 
       for (const iter of elements) {
         const pkg = iter.getAttribute("pkg");
         const module = await import(pkg);
-        const pkgPath = import.meta.resolve(pkg);
-        console.log(">>>", pkgPath);
         const name = iter.getAttribute("ctl");
         const ctl = module[name];
         templateElm.innerHTML = ctl.template.rootHTML;
