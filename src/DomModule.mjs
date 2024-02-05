@@ -155,6 +155,11 @@ async function generate({dom, baseUrl, isDebug, sourceDir, distDir, writeAsset, 
         iter.id && (controlElm.id = iter.id);
         iter.replaceWith(controlElm);
 
+        if (isDebug) {
+          const comment = document.createComment(`'${name}' from ${pkg}`);
+          controlElm.parentElement.insertBefore(controlElm, comment);
+        }
+
         cssMap[pkg] = cssMap[pkg] || {};
         if (!cssMap[pkg][name]) {
           cssOptionList.push({
