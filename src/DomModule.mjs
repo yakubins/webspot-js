@@ -141,23 +141,19 @@ async function generate({dom, baseUrl, isDebug, sourceDir, distDir, writeAsset, 
       const elements = Array.from(document.getElementsByTagName("webctl"));
       for (const iter of elements) {
         const pkg = iter.getAttribute("pkg");
-        const module = await import(pkg);
         const name = iter.getAttribute("ctl");
 
         const pkgMainUrl = importMetaResolve(pkg, import.meta.url);
         const pkgMainDir = path.dirname(pkgMainUrl);
-        const ctlpath = path.join(pkgMainDir, name, 'index.mjs');
-        const ctlmod = await import(ctlpath);
-        const ctl = ctlmod.default;
+        const ctlUrl = path.join(pkgMainDir, name, 'index.mjs');
+        const workDir = path.dirname(fileURLToPath(ctlUrl));
+        const module = await import(ctlUrl);
+        const ctl = module.default;
 
-        //const ctl = module[name];
         templateElm.innerHTML = ctl.template.rootHTML;
         const controlElm = templateElm.content.firstElementChild;
         iter.id && (controlElm.id = iter.id);
         iter.replaceWith(controlElm);
-
-        const filepath = fileURLToPath(ctl.template.metaUrl);
-        const workDir = path.dirname(filepath);
 
         cssMap[pkg] = cssMap[pkg] || {};
         if (!cssMap[pkg][name]) {
