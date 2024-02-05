@@ -157,7 +157,7 @@ async function generate({dom, baseUrl, isDebug, sourceDir, distDir, writeAsset, 
 
         if (isDebug) {
           const comment = document.createComment(`'${name}' from ${pkg}`);
-          controlElm.parentElement.insertBefore(controlElm, comment);
+          controlElm.parentElement.insertBefore(comment, controlElm);
         }
 
         cssMap[pkg] = cssMap[pkg] || {};
