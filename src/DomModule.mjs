@@ -145,10 +145,10 @@ async function generate({dom, baseUrl, isDebug, sourceDir, distDir, writeAsset, 
         const name = iter.getAttribute("ctl");
 
         const pkgMainUrl = importMetaResolve(pkg, import.meta.url);
-        const pkgMainFile = fileURLToPath(pkgMainUrl);
-        const pkgMainDir = path.dirname(pkgMainFile);
+        //const pkgMainFile = fileURLToPath(pkgMainUrl);
+        const pkgMainDir = path.dirname(pkgMainUrl);
 
-        const ctlpath = path.join(pkgMainDir, name);
+        const ctlpath = path.join(pkgMainDir, name, 'index.mjs');
         const ctlmod = await import(ctlpath);
         console.log(`>>>`, ctlmod);
 
