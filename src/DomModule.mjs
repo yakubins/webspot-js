@@ -1,6 +1,7 @@
 import path from "node:path";
 import { fileURLToPath } from 'node:url';
 import jsdom from "jsdom";
+import { resolve as importMetaResolve } from 'import-meta-resolve';
 
 import { copyFileIfDifferent } from './Lib.mjs';
 import styleModule from './StyleModule.mjs';
@@ -142,6 +143,8 @@ async function generate({dom, baseUrl, isDebug, sourceDir, distDir, writeAsset, 
         const pkg = iter.getAttribute("pkg");
         const module = await import(pkg);
         const name = iter.getAttribute("ctl");
+        const pkgPath = importMetaResolve(pkg, import.meta.url);
+        console.log(`>>> ${pkgPath}`);
         const ctl = module[name];
         templateElm.innerHTML = ctl.template.rootHTML;
         const controlElm = templateElm.content.firstElementChild;
