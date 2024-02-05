@@ -145,14 +145,12 @@ async function generate({dom, baseUrl, isDebug, sourceDir, distDir, writeAsset, 
         const name = iter.getAttribute("ctl");
 
         const pkgMainUrl = importMetaResolve(pkg, import.meta.url);
-        //const pkgMainFile = fileURLToPath(pkgMainUrl);
         const pkgMainDir = path.dirname(pkgMainUrl);
-
         const ctlpath = path.join(pkgMainDir, name, 'index.mjs');
         const ctlmod = await import(ctlpath);
-        console.log(`>>>`, ctlmod);
+        const ctl = ctlmod.default;
 
-        const ctl = module[name];
+        //const ctl = module[name];
         templateElm.innerHTML = ctl.template.rootHTML;
         const controlElm = templateElm.content.firstElementChild;
         iter.id && (controlElm.id = iter.id);
