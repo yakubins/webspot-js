@@ -149,7 +149,8 @@ async function generate({dom, baseUrl, isDebug, sourceDir, distDir, writeAsset, 
         const pkgMainDir = path.dirname(pkgMainFile);
 
         const ctlpath = path.join(pkgMainDir, name);
-        console.log(`>>> ${ctlpath}`);
+        const ctlmod = await import(ctlpath);
+        console.log(`>>>`, ctlmod);
 
         const ctl = module[name];
         templateElm.innerHTML = ctl.template.rootHTML;
