@@ -216,8 +216,7 @@ async function generate({dom, baseUrl, isDebug, sourceDir, distDir, writeAsset, 
         description,
       };
 
-      if (params.application.icon) {
-        const pathStr = params.application.icon;
+      const addAppImage = async (filename) => {
         const filename = path.basename(pathStr);
 
         const inFilename = path.resolve(sourceDir, pathStr);
@@ -226,22 +225,26 @@ async function generate({dom, baseUrl, isDebug, sourceDir, distDir, writeAsset, 
         addAsset(filename);
         if (await copyFileIfDifferent(inFilename, outFilename))
           console.log(`[dom.configure] Copy ${filename}`);
-        
-          application.icon = filename;
+
+        return filename;
+      }
+
+      if (params.application.icon) {
+        application.icon = addAppImage(params.application.icon);
       }
 
       if (params.application.logo) {
-        const pathStr = params.application.logo;
-        const filename = path.basename(pathStr);
-
-        const inFilename = path.resolve(sourceDir, pathStr);
-        const outFilename = path.resolve(distDir, filename);
-  
-        addAsset(filename);
-        if (await copyFileIfDifferent(inFilename, outFilename))
-          console.log(`[dom.configure] Copy ${filename}`);
-        
-          application.logo = filename;
+        let logo = [];
+        if (typeof params.application.logo === 'object') {
+          logo = params.application.logo;
+        }
+        else if (typeof params.application.logo === 'string') {
+          logo = [ params.application.logo, params.application.logo ];
+        }
+        application.logo = [];
+        for (const iter of logo) {
+          application.logo.push(addAppImage(iter));
+        }
       }
 
       setApplication(application);
