@@ -216,7 +216,7 @@ async function generate({dom, baseUrl, isDebug, sourceDir, distDir, writeAsset, 
         description,
       };
 
-      const addAppImage = async (filename) => {
+      const addAppImage = async (pathStr) => {
         const filename = path.basename(pathStr);
 
         const inFilename = path.resolve(sourceDir, pathStr);
