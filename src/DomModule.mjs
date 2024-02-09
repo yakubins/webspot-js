@@ -230,7 +230,7 @@ async function generate({dom, baseUrl, isDebug, sourceDir, distDir, writeAsset, 
       }
 
       if (params.application.icon) {
-        application.icon = addAppImage(params.application.icon);
+        application.icon = await addAppImage(params.application.icon);
       }
 
       if (params.application.logo) {
@@ -243,7 +243,7 @@ async function generate({dom, baseUrl, isDebug, sourceDir, distDir, writeAsset, 
         }
         application.logo = [];
         for (const iter of logo) {
-          application.logo.push(addAppImage(iter));
+          application.logo.push(await addAppImage(iter));
         }
       }
 
