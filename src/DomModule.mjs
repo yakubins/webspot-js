@@ -190,7 +190,7 @@ async function generate({dom, baseUrl, isDebug, sourceDir, distDir, writeAsset, 
             const portElm = controlElm.classList.contains(portClass) ? controlElm : controlElm.querySelector("." + portClass);
             while (iter.firstChild) {
               const child = iter.firstChild.parentNode.removeChild(iter.firstChild);
-              controlElm.appendChild(child);
+              portElm.appendChild(child);
             }
           }
 
