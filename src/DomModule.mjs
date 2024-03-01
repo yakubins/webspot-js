@@ -165,14 +165,13 @@ async function generate({dom, baseUrl, isDebug, sourceDir, distDir, writeAsset, 
       const templateElm = document.createElement('template');
 
       const replaceWebctl = async (element) => {
-        for (const iter of Array.from(element.children)) {
+        for await (const iter of Array.from(element.children)) {
           await replaceWebctl(iter);
+        }
 
-          if (iter.tagName !== 'webctl')
-            continue;
-
-          const pkg = iter.getAttribute("pkg");
-          const name = iter.getAttribute("ctl");
+        if (element.tagName === 'webctl') {
+          const pkg = element.getAttribute("pkg");
+          const name = element.getAttribute("ctl");
   
           const pkgMainUrl = importMetaResolve(pkg, import.meta.url);
           const pkgMainDir = path.dirname(pkgMainUrl);
@@ -183,25 +182,25 @@ async function generate({dom, baseUrl, isDebug, sourceDir, distDir, writeAsset, 
   
           templateElm.innerHTML = ctl.template.rootHTML;
           const controlElm = templateElm.content.firstElementChild;
-          iter.id && (controlElm.id = iter.id);
-
+          element.id && (controlElm.id = element.id);
+  
           const portClass = ctl.template.portClass;
           if (portClass) {
             const portElm = controlElm.classList.contains(portClass) ? controlElm : controlElm.querySelector("." + portClass);
-            while (iter.firstChild) {
-              const child = iter.firstChild.parentNode.removeChild(iter.firstChild);
+            while (element.firstChild) {
+              const child = element.firstChild.parentNode.removeChild(element.firstChild);
               portElm.appendChild(child);
             }
           }
-
-          iter.replaceWith(controlElm);
+  
+          element.replaceWith(controlElm);
   
           cssMap[pkg] = cssMap[pkg] || {};
           if (!cssMap[pkg][name]) {
             cssOptionList.push({
               from: 'index.css',
               to: cssFilename,
-              prop: null, // properties.css
+              prop: null,
               isDebug,
               workDir,
               isInlineSvg: true,
