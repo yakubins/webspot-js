@@ -169,7 +169,7 @@ async function generate({dom, baseUrl, isDebug, sourceDir, distDir, writeAsset, 
           await replaceWebctl(iter);
         }
 
-        if (element.tagName === 'webctl') {
+        if (element.tagName.toLowerCase() === 'webctl') {
           const pkg = element.getAttribute("pkg");
           const name = element.getAttribute("ctl");
   
