@@ -163,36 +163,55 @@ async function generate({dom, baseUrl, isDebug, sourceDir, distDir, writeAsset, 
     {
       const cssMap = {};
       const templateElm = document.createElement('template');
-      const elements = Array.from(document.getElementsByTagName("webctl"));
-      for (const iter of elements) {
-        const pkg = iter.getAttribute("pkg");
-        const name = iter.getAttribute("ctl");
 
-        const pkgMainUrl = importMetaResolve(pkg, import.meta.url);
-        const pkgMainDir = path.dirname(pkgMainUrl);
-        const ctlUrl = path.join(pkgMainDir, name, 'index.mjs');
-        const workDir = path.dirname(fileURLToPath(ctlUrl));
-        const module = await import(ctlUrl);
-        const ctl = module.default;
+      const replaceWebctl = async (element) => {
+        for (const iter of Array.from(element.children)) {
+          replaceWebctl(iter);
 
-        templateElm.innerHTML = ctl.template.rootHTML;
-        const controlElm = templateElm.content.firstElementChild;
-        iter.id && (controlElm.id = iter.id);
-        iter.replaceWith(controlElm);
+          if (iter.tagName !== 'webctl')
+            continue;
 
-        cssMap[pkg] = cssMap[pkg] || {};
-        if (!cssMap[pkg][name]) {
-          cssOptionList.push({
-            from: 'index.css',
-            to: cssFilename,
-            prop: null, // properties.css
-            isDebug,
-            workDir,
-            isInlineSvg: true,
-          });
-          cssMap[pkg][name] = true;
+          const pkg = iter.getAttribute("pkg");
+          const name = iter.getAttribute("ctl");
+  
+          const pkgMainUrl = importMetaResolve(pkg, import.meta.url);
+          const pkgMainDir = path.dirname(pkgMainUrl);
+          const ctlUrl = path.join(pkgMainDir, name, 'index.mjs');
+          const workDir = path.dirname(fileURLToPath(ctlUrl));
+          const module = await import(ctlUrl);
+          const ctl = module.default;
+  
+          templateElm.innerHTML = ctl.template.rootHTML;
+          const controlElm = templateElm.content.firstElementChild;
+          iter.id && (controlElm.id = iter.id);
+
+          const portClass = ctl.template.portClass;
+          if (portClass) {
+            const portElm = controlElm.classList.contains(portClass) ? controlElm : controlElm.querySelector("." + portClass);
+            while (iter.firstChild) {
+              const child = iter.firstChild.parentNode.removeChild(iter.firstChild);
+              controlElm.appendChild(child);
+            }
+          }
+
+          iter.replaceWith(controlElm);
+  
+          cssMap[pkg] = cssMap[pkg] || {};
+          if (!cssMap[pkg][name]) {
+            cssOptionList.push({
+              from: 'index.css',
+              to: cssFilename,
+              prop: null, // properties.css
+              isDebug,
+              workDir,
+              isInlineSvg: true,
+            });
+            cssMap[pkg][name] = true;
+          }
         }
       }
+
+      replaceWebctl(document.documentElement);
     }
 
     const cssResult = [];
