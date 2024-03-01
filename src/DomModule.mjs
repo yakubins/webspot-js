@@ -166,7 +166,7 @@ async function generate({dom, baseUrl, isDebug, sourceDir, distDir, writeAsset, 
 
       const replaceWebctl = async (element) => {
         for (const iter of Array.from(element.children)) {
-          replaceWebctl(iter);
+          await replaceWebctl(iter);
 
           if (iter.tagName !== 'webctl')
             continue;
@@ -211,7 +211,7 @@ async function generate({dom, baseUrl, isDebug, sourceDir, distDir, writeAsset, 
         }
       }
 
-      replaceWebctl(document.documentElement);
+      await replaceWebctl(document.documentElement);
     }
 
     const cssResult = [];
