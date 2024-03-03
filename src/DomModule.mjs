@@ -172,7 +172,7 @@ async function generate({dom, baseUrl, isDebug, sourceDir, distDir, writeAsset, 
         if (element.tagName.toLowerCase() === 'webctl') {
           const pkg = element.getAttribute("pkg");
           const name = element.getAttribute("ctl");
-  
+
           const pkgMainUrl = importMetaResolve(pkg, import.meta.url);
           const pkgMainDir = path.dirname(pkgMainUrl);
           const ctlUrl = path.join(pkgMainDir, name, 'index.mjs');
@@ -186,7 +186,7 @@ async function generate({dom, baseUrl, isDebug, sourceDir, distDir, writeAsset, 
   
           const portClass = ctl.template.portClass;
           if (portClass) {
-            const portElm = controlElm.classList.contains(portClass) ? controlElm : controlElm.querySelector("." + portClass);
+            const portElm = controlElm.classList.contains(portClass) ? controlElm : controlElm.querySelector(`.${portClass}`);
             while (element.firstChild) {
               const child = element.removeChild(element.firstChild);
               portElm.appendChild(child);
