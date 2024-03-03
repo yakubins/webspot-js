@@ -188,7 +188,7 @@ async function generate({dom, baseUrl, isDebug, sourceDir, distDir, writeAsset, 
           if (portClass) {
             const portElm = controlElm.classList.contains(portClass) ? controlElm : controlElm.querySelector("." + portClass);
             while (element.firstChild) {
-              const child = element.firstChild.parentNode.removeChild(element.firstChild);
+              const child = element.removeChild(element.firstChild);
               portElm.appendChild(child);
             }
           }
